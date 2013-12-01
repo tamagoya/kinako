@@ -1,0 +1,3 @@
+asset 'jquery'
+asset 'jquery-ujs'
+asset 'bootstrap', '>= 3.0.0'
