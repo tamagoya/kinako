@@ -12,6 +12,9 @@ group :production do
   gem 'pg'
 end
 
+# Use devise
+gem 'devise'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
