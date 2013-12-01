@@ -121,7 +121,6 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   jbuilder (~> 1.2)
-  jquery-rails
   pg
   rails (= 4.0.1)
   sass-rails (~> 4.0.0)
