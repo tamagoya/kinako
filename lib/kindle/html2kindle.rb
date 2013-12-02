@@ -34,4 +34,3 @@ module Html2Kindle
   end
 end
 
-Html2Kindle.send('test@kindle.com','http://law.e-gov.go.jp/htmldata/S28/S28HO006.html')
