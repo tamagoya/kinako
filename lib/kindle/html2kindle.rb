@@ -24,7 +24,7 @@ module Html2Kindle
   
   def self.get_html(file_path , uri)
     open(uri) do |_uri|
-      File.open(file_path, "w") do |html|
+      File.open(file_path, "wb") do |html|
         html.puts(_uri.read)
       end
     end
@@ -34,3 +34,4 @@ module Html2Kindle
   end
 end
 
+Html2Kindle.send('test@kindle.com','http://law.e-gov.go.jp/htmldata/S28/S28HO006.html')
