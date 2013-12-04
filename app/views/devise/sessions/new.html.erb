@@ -1,6 +1,6 @@
 <div class="container">
   <div class="col-lg-4">
-    <h2 class="form-signin-heading">Sign in</h2>    
+    <h2>Sign in</h2>    
     <%= form_for(resource, :class => "form-signin", :as => resource_name, :url => session_path(resource_name)) do |f| %>
       <%= f.email_field :email, :class => "form-control", :placeholder => "Email Adress", :required => true, :autofocus => true %>
       <%= f.password_field :password, :class => "form-control", :placeholder => "Password", :repuired => true %>
