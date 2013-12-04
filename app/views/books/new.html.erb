@@ -1,0 +1,10 @@
+<h1>Books#new</h1>
+<%= form_tag( books_path ) do %>
+    <div id="url">
+      <%= label_tag(:target_url, "target_url") %>
+      <div>
+        <%= text_field_tag(:target_url, "", :placeholder =>"http://~") %>
+      </div>
+    </div>
+    <%= submit_tag("submit") %>
+<% end %>

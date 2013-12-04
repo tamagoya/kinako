@@ -1,6 +1,7 @@
 Kinako::Application.routes.draw do
   devise_for :users
   resources :users
+  resources :books
 
   root 'root#index'
   get "root/index"
