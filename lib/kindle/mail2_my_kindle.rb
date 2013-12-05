@@ -12,16 +12,15 @@ module Kindle
       #uriはStringもしくはArrayを想定
       # uri = Array[uri] unless uri .instance_of?(Array)
 
-      #まずは1fileに対応
-      file_name =File.basename(uri)
-      
-      #TODO 対応している拡張子かチェックを書く
-      
-      #TODO Dir#tmpdir は Dir#mktmpdirに切り替える予定
-      file_path = "#{Dir.tmpdir}/#{file_name}"
-      self.get_file(file_path , uri)
+      Dir.mktmpdir{|dir|
+        #まずは1fileに対応
+        file_name =File.basename(uri)
+        #TODO 対応している拡張子かチェックを書く
+        file_path = "#{dir}/#{file_name}"
+        self.get_file(file_path , uri)
+        Mailer.send_mail(mail_adress , file_path).deliver
+      }
 
-      Mailer.send_mail(mail_adress , file_path).deliver
     end
 
     def self.get_file(file_path , uri)

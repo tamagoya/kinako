@@ -33,4 +33,18 @@ Kinako::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  #ActionMailer
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.smtp_settings = {
+    :enable_starttls_auto => true,
+    :address => 'smtp.gmail.com',
+    :port => '587',
+    :domain => 'smtp.gmail.com',
+    :authentication => 'plain',
+    :user_name => 'kinoko@gmail.com',
+    :password => 'password'
+  }
+  
 end
