@@ -3,6 +3,7 @@ class BooksController < ApplicationController
   end
 
   def create
-    @result = params[:target_url]
+    Kindle::Mail2MyKindle.send(current_user.email, params[:target_url])
+    @result = "Send " +  params[:target_url] + " to " + current_user.email
   end
 end
