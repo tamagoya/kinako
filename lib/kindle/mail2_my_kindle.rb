@@ -18,12 +18,12 @@ module Kindle
       #TODO 対応している拡張子かチェックを書く
       
       #TODO Dir#tmpdir は Dir#mktmpdirに切り替える予定
-      path = "#{Dir.tmpdir}/#{file_name}"
-      self.get_file(path ,uri)
+      file_path = "#{Dir.tmpdir}/#{file_name}"
+      self.get_file(file_path , uri)
+
+      Mailer.send_mail(mail_adress , file_path).deliver
     end
 
-    private 
-    
     def self.get_file(file_path , uri)
       open(uri) do |_uri|
         File.open(file_path, "wb") do |html|
@@ -31,8 +31,22 @@ module Kindle
         end
       end
     end
-    def self.send_mail(adress,file)
-      #TODO mail処理をかく
+  end
+
+  class Mailer < ActionMailer::Base
+    #TODO FROM側のメールアドレスは設定で指定するようにしたい
+    default :from => 'kinoko@gmail.com'
+
+    def send_mail(mail_adress , file_path) 
+      #ファイル添付
+      attachments[File.basename(file_path)] = {
+        :content => File.read(file_path , :mode => 'rb'),
+        :transfer_encoding => :binary
+      }
+
+      mail(:to => mail_adress,
+           :subject => '',
+           :body =>'')
     end
   end
 end
