@@ -15,6 +15,22 @@ class Mail2MyKindleTest < ActiveSupport::TestCase
     File.unlink("#{Dir.tmpdir}/test.html") if Dir::entries(Dir.tmpdir).include?('test.html')
   end
 
+  test "ファイルの拡張子をチェックしてファイル名を取得できること" do
+    assert_equal Kindle::Mail2MyKindle.save_file_name('http://qwik.jp/minamirb/FrontPage.html') , 'FrontPage.html'
+    assert_equal Kindle::Mail2MyKindle.save_file_name('http://qwik.jp/minamirb/FrontPage.pdf') , 'FrontPage.pdf'
+
+    #対応していない拡張子の場合はnil
+    assert_nil Kindle::Mail2MyKindle.save_file_name('http://qwik.jp/minamirb/FrontPage.test')
+
+    #拡張子が無い場合はhtmlとみなす
+    assert_equal Kindle::Mail2MyKindle.save_file_name('http://qwik.jp/minamirb/FrontPage') , 'FrontPage.html'
+
+    #パラメータは除いて判定する
+    assert_equal Kindle::Mail2MyKindle.save_file_name('http://www.amazon.co.jp/gp/help/customer/display.html?nodeId=xxxxxxxxx') , 'display.html'
+    assert_nil Kindle::Mail2MyKindle.save_file_name('http://www.amazon.co.jp/gp/help/customer/display.pdf?nodeId=xxxxxxxxx')
+
+  end
+
   test "メールの送信テスト" do
     #グローバルな変数みたいなので毎回クリア?
     ActionMailer::Base.deliveries.clear
@@ -37,7 +53,7 @@ class Mail2MyKindleTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries.clear
   end
 
-  test "メールアドレスとURLを渡したらURLを取得してメール送信を行うこと" do
+  test "メールアドレスとURLを渡したらURLからファイルを取得してメール送信を行うこと" do
     ActionMailer::Base.deliveries.clear
 
     Kindle::Mail2MyKindle.send("test@gmial.com",'http://qwik.jp/minamirb/FrontPage.html')

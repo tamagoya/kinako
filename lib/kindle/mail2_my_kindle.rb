@@ -7,15 +7,19 @@ require 'tmpdir'
 # Kindle::Mail2MyKindle.send('test@kindle.com','http://law.e-gov.go.jp/htmldata/S28/S28HO006.html')
 #
 module Kindle
+  FILENAME_EXTENSION = ['doc','docx','html','htm','rtf','jpeg','jpg','mobi','azw','gif','png','bmp','pdf']
+
   class Mail2MyKindle
     def self.send(mail_adress , uri)
       #uriはStringもしくはArrayを想定
       # uri = Array[uri] unless uri .instance_of?(Array)
 
+      file_name =save_file_name(uri)
+      #対応していない拡張子の場合は終了
+      #TODO NameErrorあたりを投げるのが妥当か考える
+      return if file_name == nil
+
       Dir.mktmpdir{|dir|
-        #まずは1fileに対応
-        file_name =File.basename(uri)
-        #TODO 対応している拡張子かチェックを書く
         file_path = "#{dir}/#{file_name}"
         self.get_file(file_path , uri)
         Mailer.send_mail(mail_adress , file_path).deliver
@@ -29,6 +33,18 @@ module Kindle
           html.puts(_uri.read)
         end
       end
+    end
+
+    #URLから保存するファイルを名を返す
+    #拡張子のチェックを行いkindleが対応していない場合は nil
+    def self.save_file_name(uri)
+      #param cut
+      file_name =File.basename(uri).gsub(/\?.*$/,'')
+
+      ext = File.extname(file_name).downcase
+      return file_name + '.html' if "".eql?(ext)
+      FILENAME_EXTENSION.include?(ext.gsub(/\./,''))  ? file_name
+                                                      : nil
     end
   end
 
@@ -48,5 +64,6 @@ module Kindle
            :body =>'')
     end
   end
+
 end
 
