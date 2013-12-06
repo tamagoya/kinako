@@ -17,7 +17,7 @@ module Kindle
       file_name =save_file_name(uri)
       #対応していない拡張子の場合は終了
       #TODO NameErrorあたりを投げるのが妥当か考える
-      return if file_name == nil
+      raise NameError.new("キンドルパーソナルドキュメントに対応しているファイルではありません。", uri) if file_name == nil
 
       Dir.mktmpdir{|dir|
         file_path = "#{dir}/#{file_name}"

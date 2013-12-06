@@ -27,7 +27,7 @@ class Mail2MyKindleTest < ActiveSupport::TestCase
 
     #パラメータは除いて判定する
     assert_equal Kindle::Mail2MyKindle.save_file_name('http://www.amazon.co.jp/gp/help/customer/display.html?nodeId=xxxxxxxxx') , 'display.html'
-    assert_nil Kindle::Mail2MyKindle.save_file_name('http://www.amazon.co.jp/gp/help/customer/display.pdf?nodeId=xxxxxxxxx')
+    assert_nil Kindle::Mail2MyKindle.save_file_name('http://www.amazon.co.jp/gp/help/customer/display.test?nodeId=xxxxxxxxx')
 
   end
 
@@ -56,13 +56,19 @@ class Mail2MyKindleTest < ActiveSupport::TestCase
   test "メールアドレスとURLを渡したらURLからファイルを取得してメール送信を行うこと" do
     ActionMailer::Base.deliveries.clear
 
-    Kindle::Mail2MyKindle.send("test@gmial.com",'http://qwik.jp/minamirb/FrontPage.html')
-
+    Kindle::Mail2MyKindle.send("test@gmail.com",'http://qwik.jp/minamirb/FrontPage.html')
     # メール内容テスト
-    assert_equal email.from , ["kinoko@gmail.com"]
-    assert_equal email.to , ["test@gmail.com"]
+    assert_equal ActionMailer::Base.deliveries.last.from , ["kinoko@gmail.com"]
+    assert_equal ActionMailer::Base.deliveries.last.to , ["test@gmail.com"]
     #TODO 添付ファイルのファイル名のテストを行いたいがうまくできない
 
     ActionMailer::Base.deliveries.clear
+  end
+
+  test "対応していないファイルフォーマットの場合はNameErrorが投げられること" do
+    ActionMailer::Base.deliveries.clear
+    assert_raise(NameError) {
+      Kindle::Mail2MyKindle.send("test@gmial.com",'http://qwik.jp/minamirb/FrontPage.test')
+    }
   end
 end 
